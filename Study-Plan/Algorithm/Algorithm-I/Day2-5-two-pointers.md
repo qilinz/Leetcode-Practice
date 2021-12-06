@@ -1,4 +1,4 @@
-# Day 2 - Two Pointers
+# Day 2-5 : Two Pointers
 Two Pointers mean firstly checking two elements - the first and the last elements in the array, and then check the first and the last elements in the array that have not been checked, so on and so force. It's a technique typically used in **searching pairs in a sorted array**.
 ## 977. Squares of a Sorted Array
 ### Question
@@ -66,3 +66,57 @@ Let n = 7 and k = 3
 - After reversing first k numbers : 5 6 7 4 3 2 1
 - After reversing last n-k numbers: 5 6 7 1 2 3 4 
 ```
+
+## 283. Move Zeroes
+### Question
+Given an integer array `nums`, move all 0's to the end of it while maintaining the relative order of the non-zero elements.
+
+Note that you must do this in-place without making a copy of the array.
+
+### Solution
+``` 
+class Solution:
+    def moveZeroes(self, nums: List[int]) -> None:
+        """
+        Do not return anything, modify nums in-place instead.
+        """
+        i = 0
+        for j in range(len(nums)):
+            if nums[j] != 0:
+                nums[j], nums[i] = nums[i], nums[j]
+                i += 1
+```
+### Notes
+The idea is to generate two pointer, one for iterating the list (`j`), the other to store the position of 0 in `nums` (`i`). If `nums[j] != 0`, this item should be passed, thus: (1) switch with the last 0 item; (2) `i += 1` to record the current position of 0. 
+
+## 167. Two Sum II - Input Array Is Sorted
+### Question
+Given a 1-indexed array of integers numbers that is already sorted in non-decreasing order, find two numbers such that they add up to a specific target number. Let these two numbers be `numbers[index1]` and `numbers[index2]` where `1 <= index1 < index2 <= numbers.length`.
+
+Return the indices of the two numbers, `index1` and `index2`, added by one as an integer array `[index1, index2]` of length 2.
+
+The tests are generated such that there is exactly one solution. You may not use the same element twice.
+
+### Solution
+``` 
+class Solution:
+    def twoSum(self, numbers: List[int], target: int) -> List[int]:
+        left = 0
+        right = len(numbers) - 1
+        for i in range(len(numbers)):
+            if numbers[left] + numbers[right] == target:
+                return [left+1, right+1]
+            elif numbers[left] + numbers[right] > target:
+                right -= 1
+            else:
+                left += 1
+```
+
+### Notes:
+(finally solve a two pointers problem by myself)
+
+The idea is that:
+- use `i` to count
+- check the sum of the min and the max
+  - if sum > target, max is too big, thus should not be used 
+  - if sum < target, min is too small, thus should not be used
