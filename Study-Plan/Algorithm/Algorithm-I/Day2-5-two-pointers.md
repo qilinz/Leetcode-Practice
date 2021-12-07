@@ -103,7 +103,7 @@ class Solution:
     def twoSum(self, numbers: List[int], target: int) -> List[int]:
         left = 0
         right = len(numbers) - 1
-        for i in range(len(numbers)):
+        while left < right:
             if numbers[left] + numbers[right] == target:
                 return [left+1, right+1]
             elif numbers[left] + numbers[right] > target:
@@ -116,7 +116,71 @@ class Solution:
 (finally solve a two pointers problem by myself)
 
 The idea is that:
-- use `i` to count
+- `while left < right` to make sure every item is only used once
 - check the sum of the min and the max
   - if sum > target, max is too big, thus should not be used 
   - if sum < target, min is too small, thus should not be used
+
+## 344. Reverse String
+### Question
+Write a function that reverses a string. The input string is given as an array of characters `s`.
+
+You must do this by modifying the input array `in-place` with `O(1)` extra memory.
+### Solution
+My solution:
+``` 
+class Solution:
+    def reverseString(self, s: List[str]) -> None:
+        """
+        Do not return anything, modify s in-place instead.
+        """
+        left = 0
+        right = len(s) - 1
+        while left < right:
+            s[left], s[right] = s[right], s[left]
+            left += 1
+            right -= 1
+        
+```
+Others' solution:
+```
+class Solution:
+    def reverseString(self, s):
+        for i in range(len(s)//2): 
+            s[i], s[-i-1] = s[-i-1], s[i]
+```
+### Notes
+The ideas of the two solution are the same: swap the left and the right item of the list. While the two pointers are "increasing" in the same speed, we can use one `i` to  represent `left` and `right`.
+
+## 557. Reverse Words in a String III
+### Question
+Given a string `s`, reverse the order of characters in each word within a sentence while still preserving whitespace and initial word order.
+
+### Solution
+``` 
+class Solution:
+    def reverseWords(self, s: str) -> str:
+        new_list = s.split(" ")
+        for i in range(len(new_list)):
+            new_list[i] = self.reverse(new_list[i]) 
+        return " ".join(new_list)
+
+    
+    def reverse(self, word: str) -> str:
+        word = list(word)
+        for i in range(len(word) // 2):
+            word[i], word[len(word) - i - 1] = word[len(word) - i - 1], word[i]
+        return "".join(word)
+```
+### Notes
+The idea is to separate the str into list of words first. Then reverse every word. Finally, join them together. 
+
+## 344. Reverse String
+### Question
+### Solution
+### Notes
+
+## 344. Reverse String
+### Question
+### Solution
+### Notes
