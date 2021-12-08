@@ -1,3 +1,4 @@
 
 *.xml
 .DS_Store
+/Study-Plan/Algorithm/Algorithm-I/main.py
