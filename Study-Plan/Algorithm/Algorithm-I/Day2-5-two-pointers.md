@@ -113,8 +113,6 @@ class Solution:
 ```
 
 ### Notes:
-(finally solve a two pointers problem by myself)
-
 The idea is that:
 - `while left < right` to make sure every item is only used once
 - check the sum of the min and the max
@@ -175,12 +173,76 @@ class Solution:
 ### Notes
 The idea is to separate the str into list of words first. Then reverse every word. Finally, join them together. 
 
-## 344. Reverse String
+## 876. Middle of the Linked List
 ### Question
-### Solution
-### Notes
+Given the `head` of a singly linked list, return the middle node of the linked list.
 
-## 344. Reverse String
-### Question
-### Solution
+If there are two middle nodes, return the second middle node.
+### Solution 1
+``` 
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def middleNode(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        arr = [head]
+        while arr[-1].next:
+            arr.append(arr[-1].next)
+        return arr[len(arr) // 2]
+
+```
+### Solution 2
+```
+class Solution:
+    def middleNode(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        slow = fast = head
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+        return slow
+```
 ### Notes
+- Solution 1: Add all the nodes to an array, then return the middle item of the array.
+- Solution 2: Find the target using two pointers. The fast pointer goes twice as fast as the slow pointer.
+  - Why not check `fast.next` only? 
+  - That will not work as the `fast.next.next` can be `None`. Error will thus arise when checking the next `fast.next`.
+
+## 19. Remove Nth Node From End of List
+### Question
+Given the `head` of a linked list, remove the n<sup>th</sup> node from the end of the list and return its head.
+### Solution
+``` 
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+
+class Solution:
+    def removeNthFromEnd(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
+        slow = fast = head
+        # make fast is n ahead of slow
+        for i in range(n):
+            fast = fast.next
+        
+        # Hold exception:
+        # if fast is none, it means fast reach "the next of the last node". 
+        # This means n = the length of the linked list. 
+        # n^th node from the end is the first node of the linked list.
+        if fast is None:
+            return head.next
+        
+        # make the fast goes to the end, then the slow will be one node before the target node
+        while fast.next:
+            slow = slow.next
+            fast = fast.next
+        
+        # jump the target node
+        slow.next = slow.next.next
+        return head
+```
+### Notes
+- [Best explanation](https://leetcode.com/problems/remove-nth-node-from-end-of-list/discuss/1164542/JS-Python-Java-C%2B%2B-or-Easy-Two-Pointer-Solution-w-Explanation)
+- Why head is modified: `slow` is a reference of `head`, not a copy of `head`. Thus, if `slow` is changed, `head` is affected as well. ("you are modifying a child node that the `head` is pointing to")
