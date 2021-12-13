@@ -212,12 +212,147 @@ class Solution:
 ### Notes
 My question is that which one is more readable?
 
-## 733. Flood Fill
+## 542. 01 Matrix
 ### Question
-### Solution
-### Notes
+Given an `m x n` binary matrix `mat`, return the distance of the nearest `0` for each cell.
 
-## 733. Flood Fill
-### Question
-### Solution
+The distance between two adjacent cells is `1`.
+### Solution 1: Dynamic Programming
+``` 
+class Solution:
+    def updateMatrix(self, mat: List[List[int]]) -> List[List[int]]:
+        m, n = len(mat), len(mat[0])
+        
+        # 1st round: using top and left to update the distance
+        for r in range(m):
+            for c in range(n):
+                if mat[r][c] != 0:
+                    top = mat[r-1][c] if r>0 else math.inf
+                    left = mat[r][c-1] if c>0 else math.inf
+                    mat[r][c] = min(top, left) + 1
+        
+        # 2nd round: using bottom and right to update the distance
+        for r in range(m-1, -1, -1):
+            for c in range(n-1, -1, -1):
+                if mat[r][c] != 0:
+                    bottom = mat[r+1][c] if r<m-1 else math.inf
+                    right = mat[r][c+1] if c<n-1 else math.inf
+                    mat[r][c] = min(mat[r][c], bottom+1, right+1)
+        return mat
+```
+### Solution 2: BFS
+``` 
+class Solution:
+    def updateMatrix(self, mat: List[List[int]]) -> List[List[int]]:
+        m, n = len(mat), len(mat[0])
+        
+        # handle the position of the 4-direction neighbours
+        DIR = [(-1,0), (1, 0), (0,-1), (0, 1)]
+        
+        # create a deque to save the order of checking
+        q = deque([])
+        
+        # identify all the cells with 0 and add to deque
+        for r in range(m):
+            for c in range(n):
+                if mat[r][c] == 0:
+                    q.append((r,c))
+                else:
+                    # if not 0, marked as unchecked using "-1"
+                    mat[r][c] = -1
+        
+        # start to check
+        while q:
+            # check from the first item in the deque
+            r, c = q.popleft()
+            
+            # check the 4-direction neighbours
+            for a, b in DIR:
+                nr, nc = r+a, c+b
+                
+                # continue if out of range or already checked
+                if nr < 0 or nr >= m or nc < 0 or nc >= n or mat[nr][nc] != -1: 
+                    continue
+                    
+                # increase the distance
+                mat[nr][nc] = mat[r][c] + 1
+                # add it to the end of the deque
+                q.append((nr, nc))
+        
+        return mat
+```
 ### Notes
+- Learn from [this](https://leetcode.com/problems/01-matrix/discuss/1369741/C%2B%2BJavaPython-BFS-DP-solutions-with-Picture-Clean-and-Concise-O(1)-Space) brilliant answer.  
+- Trick of Solution 1: use math.inf to handle index out of range.
+- Idea of Solution 2: use deque to keep the order of processing from the smallest distance cell
+  - identify all the cells with 0 and add them to deque
+  - check the neighbours of the 0 cells. If it exists and isn't processed, the distance should be increased by 1. Add them to the end of deque
+  - check the neighbours of 1 cells, and so on so force. 
+
+## 994. Rotting Oranges
+### Question
+You are given an `m x n` `grid` where each cell can have one of three values:
+
+- `0 `representing an empty cell,
+- `1` representing a fresh orange, or
+- `2` representing a rotten orange.
+Every minute, any fresh orange that is 4-directionally adjacent to a rotten orange becomes rotten.
+
+Return the minimum number of minutes that must elapse until no cell has a fresh orange. If this is impossible, return `-1`.
+### Solution
+``` 
+class Solution:
+    def orangesRotting(self, grid: List[List[int]]) -> int:
+        m = len(grid)
+        n = len(grid[0])
+        DIR = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+        
+        # track rotten orange
+        q = deque([])
+        
+        # track the count of orange
+        fresh = 0
+        
+        # track minute to use
+        t = 0
+        
+        # check the status
+        for r in range(m):
+            for c in range(n):
+                # get rotten orange deque
+                if grid[r][c] == 2:
+                    q.append((r, c))
+                # get count of fresh orange
+                if grid[r][c] == 1:
+                    fresh += 1
+        
+        # if no fresh orange to rot return 0
+        if fresh == 0:
+            return 0
+
+        while q and fresh > 0:
+            t += 1
+            
+            # loop through each rotten orange in the minute
+            for _ in range(len(q)):
+                r, c = q.popleft()
+                
+                # check the neighbours
+                for a, b in DIR:
+                    nr, nc = r + a, c + b
+                    # continue if out of range or not fresh
+                    if nr < 0 or nr == m or nc < 0 or nc == n or grid[nr][nc] != 1:
+                        continue
+                        
+                    # mark the fresh orange as rotten
+                    grid[nr][nc] = 2
+                    # count decrease
+                    fresh -= 1
+                    # add to deque
+                    q.append((nr, nc))
+
+        if fresh > 0:
+            return -1
+        else:
+            return t
+```
