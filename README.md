@@ -10,7 +10,7 @@ For the first part, I follow the [study plan](https://leetcode.com/study-plan/) 
 - Day 2-5: [Two Pointers](https://github.com/qilinz/Leetcode-Practice/blob/main/Study-Plan/Algorithm/Algorithm-I/Day2-5-two-pointers.md)
 - Day 6: [Sliding Window](https://github.com/qilinz/Leetcode-Practice/blob/main/Study-Plan/Algorithm/Algorithm-I/Day6-sliding-window.md)
 - Day 7-9: [Breadth-First Search / Depth-First Search](https://github.com/qilinz/Leetcode-Practice/blob/main/Study-Plan/Algorithm/Algorithm-I/Day7-9-breadth_depth-first-search.md)
-
+- Day 10-11: [Recursion / Backtracking](https://github.com/qilinz/Leetcode-Practice/blob/main/Study-Plan/Algorithm/Algorithm-I/Day10-11-recursion-backtracking.md)
 
 #### Concepts to check
 - hash map, hash table
